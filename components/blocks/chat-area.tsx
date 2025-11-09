@@ -4,6 +4,7 @@ import {
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader } from "@/components/ui/shadcn-io/ai/loader";
 import {
   Message,
@@ -43,6 +44,7 @@ import {
   type FormEventHandler,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { SidebarTrigger } from "../ui/sidebar";
@@ -223,99 +225,74 @@ const ChatArea = () => {
     setStreamingMessageId(null);
   }, []);
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border bg-background shadow-sm">
+    <div className="flex relative px-42 h-full w-full flex-col overflow-hidden rounded-xl border bg-background shadow-sm">
       {/* Header */}
-      <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <header className="flex h-4 shrink-0 items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
-          </header>
-          <div className="flex items-center gap-2">
-            <div className="size-2 rounded-full bg-green-500" />
-            <span className="font-medium text-sm">AI Assistant</span>
-          </div>
-          <div className="h-4 w-px bg-border" />
-          <span className="text-muted-foreground text-xs">
-            {models.find((m) => m.id === selectedModel)?.name}
-          </span>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleReset}
-          className="h-8 px-2"
-        >
-          <RotateCcwIcon className="size-4" />
-          <span className="ml-1">Reset</span>
-        </Button>
-      </div>
-      {/* Conversation Area */}
-      <Conversation className="flex-1 ">
-        <ConversationContent className="space-y-4">
-          {messages.map((message) => (
-            <div key={message.id} className="space-y-3">
-              <Message from={message.role}>
-                <MessageContent>
-                  {message.isStreaming && message.content === "" ? (
-                    <div className="flex items-center gap-2">
-                      <Loader size={14} />
-                      <span className="text-muted-foreground text-sm">
-                        Thinking...
-                      </span>
-                    </div>
-                  ) : (
-                    message.content
-                  )}
-                </MessageContent>
-                <MessageAvatar
-                  src={
-                    message.role === "user"
-                      ? "https://github.com/dovazencot.png"
-                      : "https://github.com/vercel.png"
-                  }
-                  name={message.role === "user" ? "User" : "AI"}
-                />
-              </Message>
-              {/* Reasoning */}
-              {message.reasoning && (
-                <div className="ml-10">
-                  <Reasoning
-                    isStreaming={message.isStreaming}
-                    defaultOpen={false}
-                  >
-                    <ReasoningTrigger />
-                    <ReasoningContent>{message.reasoning}</ReasoningContent>
-                  </Reasoning>
-                </div>
-              )}
-              {/* Sources */}
-              {message.sources && message.sources.length > 0 && (
-                <div className="ml-10">
-                  <Sources>
-                    <SourcesTrigger count={message.sources.length} />
-                    <SourcesContent>
-                      {message.sources.map((source, index) => (
-                        <Source
-                          key={index}
-                          href={source.url}
-                          title={source.title}
-                        />
-                      ))}
-                    </SourcesContent>
-                  </Sources>
-                </div>
-              )}
-            </div>
-          ))}
-        </ConversationContent>
-        <ConversationScrollButton />
-      </Conversation>
+      <ScrollArea onScrollEnd={} className="h-[580px] p-4">
+        {" "}
+        <Conversation className="flex-1 ">
+          <ConversationContent className="space-y-4">
+            {messages.map((message) => (
+              <div key={message.id} className="space-y-3">
+                <Message from={message.role}>
+                  <MessageContent>
+                    {message.isStreaming && message.content === "" ? (
+                      <div className="flex items-center gap-2">
+                        <Loader size={14} />
+                        <span className="text-muted-foreground text-sm">
+                          Thinking...
+                        </span>
+                      </div>
+                    ) : (
+                      message.content
+                    )}
+                  </MessageContent>
+                  <MessageAvatar
+                    src={
+                      message.role === "user"
+                        ? "https://github.com/dovazencot.png"
+                        : "https://github.com/vercel.png"
+                    }
+                    name={message.role === "user" ? "User" : "AI"}
+                  />
+                </Message>
+                {/* Reasoning */}
+                {message.reasoning && (
+                  <div className="ml-10">
+                    <Reasoning
+                      isStreaming={message.isStreaming}
+                      defaultOpen={false}
+                    >
+                      <ReasoningTrigger />
+                      <ReasoningContent>{message.reasoning}</ReasoningContent>
+                    </Reasoning>
+                  </div>
+                )}
+                {/* Sources */}
+                {message.sources && message.sources.length > 0 && (
+                  <div className="ml-10">
+                    <Sources>
+                      <SourcesTrigger count={message.sources.length} />
+                      <SourcesContent>
+                        {message.sources.map((source, index) => (
+                          <Source
+                            key={index}
+                            href={source.url}
+                            title={source.title}
+                          />
+                        ))}
+                      </SourcesContent>
+                    </Sources>
+                  </div>
+                )}
+              </div>
+            ))}
+          </ConversationContent>
+          <ConversationScrollButton />
+        </Conversation>{" "}
+      </ScrollArea>
+
       {/* Input Area */}
-      <div className=" p-4 px-96">
+      <div className=" p-4 px-4 absolute bottom-0 ">
         <PromptInput onSubmit={handleSubmit}>
           <PromptInputTextarea
             value={inputValue}
