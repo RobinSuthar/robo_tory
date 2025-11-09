@@ -49,6 +49,7 @@ import {
 } from "react";
 import { SidebarTrigger } from "../ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
+import { GPTModel } from "@/lib/actions/chatgpt";
 type ChatMessage = {
   id: string;
   content: string;
@@ -202,7 +203,7 @@ const ChatArea = () => {
           responseData.reasoning,
           responseData.sources
         );
-      }, 800);
+      }, 0);
     },
     [inputValue, isTyping, simulateTyping]
   );
@@ -225,9 +226,9 @@ const ChatArea = () => {
     setStreamingMessageId(null);
   }, []);
   return (
-    <div className="flex relative px-42 h-full w-full flex-col overflow-hidden rounded-xl border bg-background shadow-sm">
+    <div className="flex 4  px-42 h-full w-full flex-col overflow-hidden rounded-xl border bg-background shadow-sm">
       {/* Header */}
-      <ScrollArea onScrollEnd={} className="h-[580px] p-4">
+      <ScrollArea className="h-[580px] p-4">
         {" "}
         <Conversation className="flex-1 ">
           <ConversationContent className="space-y-4">
@@ -292,48 +293,54 @@ const ChatArea = () => {
       </ScrollArea>
 
       {/* Input Area */}
-      <div className=" p-4 px-4 absolute bottom-0 ">
-        <PromptInput onSubmit={handleSubmit}>
-          <PromptInputTextarea
-            value={inputValue}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-              setInputValue(e.target.value)
-            }
-            placeholder="Ask me anything about development, coding, or technology..."
-            disabled={isTyping}
-          />
-          <PromptInputToolbar>
-            <PromptInputTools>
-              <PromptInputButton disabled={isTyping}>
-                <PaperclipIcon size={16} />
-              </PromptInputButton>
-              <PromptInputButton disabled={isTyping}>
-                <MicIcon size={16} />
-                <span>Voice</span>
-              </PromptInputButton>
-              <PromptInputModelSelect
-                value={selectedModel}
-                onValueChange={setSelectedModel}
-                disabled={isTyping}
-              >
-                <PromptInputModelSelectTrigger>
-                  <PromptInputModelSelectValue />
-                </PromptInputModelSelectTrigger>
-                <PromptInputModelSelectContent>
-                  {models.map((model) => (
-                    <PromptInputModelSelectItem key={model.id} value={model.id}>
-                      {model.name}
-                    </PromptInputModelSelectItem>
-                  ))}
-                </PromptInputModelSelectContent>
-              </PromptInputModelSelect>
-            </PromptInputTools>
-            <PromptInputSubmit
-              disabled={!inputValue.trim() || isTyping}
-              status={isTyping ? "streaming" : "ready"}
+      <div className="   px-42 flex justify-center ">
+        <div className="justify-center items-center">
+          <PromptInput onSubmit={handleSubmit}>
+            <PromptInputTextarea
+              value={inputValue}
+              onChange={async (e) => {
+                setInputValue(e.target.value);
+              }}
+              placeholder="Ask me anything about development, coding, or technology..."
+              disabled={isTyping}
             />
-          </PromptInputToolbar>
-        </PromptInput>
+            <PromptInputToolbar>
+              <PromptInputTools>
+                <PromptInputButton disabled={isTyping}>
+                  <PaperclipIcon size={16} />
+                </PromptInputButton>
+                <PromptInputButton disabled={isTyping}>
+                  <MicIcon size={16} />
+                  <span>Voice</span>
+                </PromptInputButton>
+                <PromptInputModelSelect
+                  value={selectedModel}
+                  onValueChange={setSelectedModel}
+                  disabled={isTyping}
+                >
+                  <PromptInputModelSelectTrigger>
+                    <PromptInputModelSelectValue />
+                  </PromptInputModelSelectTrigger>
+                  <PromptInputModelSelectContent>
+                    {models.map((model) => (
+                      <PromptInputModelSelectItem
+                        key={model.id}
+                        value={model.id}
+                      >
+                        {model.name}
+                      </PromptInputModelSelectItem>
+                    ))}
+                  </PromptInputModelSelectContent>
+                </PromptInputModelSelect>
+              </PromptInputTools>
+              <PromptInputSubmit
+                onClick={async () => {}}
+                disabled={!inputValue.trim() || isTyping}
+                status={isTyping ? "streaming" : "ready"}
+              />
+            </PromptInputToolbar>
+          </PromptInput>
+        </div>
       </div>
     </div>
   );
