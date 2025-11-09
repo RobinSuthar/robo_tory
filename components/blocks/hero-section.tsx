@@ -10,11 +10,11 @@ const badge = "✨ Your Website Builder",
   buttons = {
     primary: {
       text: "Discover all components",
-      url: "https://www.shadcnblocks.com",
+      url: "/login",
     },
     secondary: {
       text: "View on GitHub",
-      url: "https://www.shadcnblocks.com",
+      url: "/login",
     },
   },
   image = {
