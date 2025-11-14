@@ -7,7 +7,6 @@ export async function GPTModel(promt: string) {
     model: "gpt-5",
     input: promt,
   });
-
   console.log(response.output_text);
   return response.output_text;
 }

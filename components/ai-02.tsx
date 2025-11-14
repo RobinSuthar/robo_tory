@@ -9,11 +9,37 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { GPTModel } from "@/lib/actions/chatgpt";
 import { cn } from "@/lib/utils";
-import { AIArray } from "@/type/type";
-import { IconArrowUp, IconCloud, IconPhotoScan } from "@tabler/icons-react";
-import React, { SetStateAction, useRef, useState } from "react";
+import {
+  IconAlertTriangle,
+  IconArrowUp,
+  IconCloud,
+  IconFileSpark,
+  IconGauge,
+  IconPhotoScan,
+} from "@tabler/icons-react";
+import { useRef, useState } from "react";
+
+const PROMPTS = [
+  {
+    icon: IconFileSpark,
+    text: "Write documentation",
+    prompt:
+      "Write comprehensive documentation for this codebase, including setup instructions, API references, and usage examples.",
+  },
+  {
+    icon: IconGauge,
+    text: "Optimize performance",
+    prompt:
+      "Analyze the codebase for performance bottlenecks and suggest optimizations to improve loading times and runtime efficiency.",
+  },
+  {
+    icon: IconAlertTriangle,
+    text: "Find and fix 3 bugs",
+    prompt:
+      "Scan through the codebase to identify and fix 3 critical bugs, providing detailed explanations for each fix.",
+  },
+];
 
 const MODELS = [
   {
@@ -39,16 +65,19 @@ const MODELS = [
   },
 ];
 
-interface data {
-  data: React.Dispatch<SetStateAction<AIArray>>;
-}
-
-export default function ChatArea(data: data) {
-  console.log(data);
+export default function Ai02() {
   const [inputValue, setInputValue] = useState("");
   const [selectedModel, setSelectedModel] = useState(MODELS[0]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [aiResponse, setAIResponse] = useState<string>("");
+
+  const handlePromptClick = (prompt: string) => {
+    if (inputRef.current) {
+      inputRef.current.value = prompt;
+      setInputValue(prompt);
+      inputRef.current.focus();
+    }
+  };
+
   const handleModelChange = (value: string) => {
     const model = MODELS.find((m) => m.value === value);
     if (model) {
@@ -73,7 +102,7 @@ export default function ChatArea(data: data) {
   );
 
   return (
-    <div className="flex flex-col mb-3 gap-4  lg:w-[calc(42rem-5rem)] md:w-[calc(38rem-5rem)] sm:w-[calc(28rem-5rem)] w-[calc(28rem-5rem)] ">
+    <div className="flex flex-col gap-4 w-[calc(42rem-5rem)]">
       <div className="flex min-h-[120px] flex-col rounded-2xl cursor-text bg-card border border-border shadow-lg">
         <div className="flex-1 relative overflow-y-auto max-h-[258px]">
           <Textarea
@@ -140,16 +169,6 @@ export default function ChatArea(data: data) {
             <Button
               variant="ghost"
               size="icon"
-              onClick={async (e) => {
-                const result = await GPTModel(inputValue);
-
-                if (result) {
-                  data.data({
-                    aiResponse: result,
-                  });
-                }
-                console.log("CLIENT SIDE DISPLAY : ", result);
-              }}
               className={cn(
                 "h-6 w-6 rounded-full transition-all duration-100 cursor-pointer bg-primary",
                 inputValue && "bg-primary hover:bg-primary/90!"
@@ -160,6 +179,23 @@ export default function ChatArea(data: data) {
             </Button>
           </div>
         </div>
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-2">
+        {PROMPTS.map((button) => {
+          const IconComponent = button.icon;
+          return (
+            <Button
+              key={button.text}
+              variant="ghost"
+              className="group flex items-center gap-2 rounded-full border px-3 py-2 text-sm text-foreground transition-all duration-200 hover:bg-muted/30 h-auto bg-transparent dark:bg-muted"
+              onClick={() => handlePromptClick(button.prompt)}
+            >
+              <IconComponent className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+              <span>{button.text}</span>
+            </Button>
+          );
+        })}
       </div>
     </div>
   );
