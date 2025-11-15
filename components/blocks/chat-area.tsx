@@ -141,11 +141,13 @@ export default function ChatArea(data: data) {
               id="submitButton"
               variant="ghost"
               onClick={async (e) => {
+                data.setInput(true);
                 setButtonLoading(true);
                 const result = await GPTModel(inputValue);
                 setInputValue("");
                 setButtonLoading(false);
                 if (result) {
+                  data.setInput(false);
                   return data.setData((prevItems) => [
                     ...prevItems,
                     {

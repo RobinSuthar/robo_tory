@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sidebar";
 import ChatArea from "./chat-area";
 import { useEffect, useState } from "react";
-import { Brain, X } from "lucide-react";
+import { Brain, BrainCircuit, X } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Response } from "../ui/shadcn-io/ai/response";
 import { AIArray } from "@/type/type";
@@ -42,7 +42,7 @@ export default function Dashboard() {
         </header>
         <div className=" flex justify-center ">
           <div className="top-0  lg:w-[calc(52rem-5rem)]  md:w-[calc(38rem-5rem)] sm:w-[calc(28rem-5rem)] w-[calc(28rem-5rem)] ">
-            <ScrollArea className="h-[600px] min-aw-full">
+            <ScrollArea className="h-[600px] min-w-full">
               {" "}
               {gptResponse.map((xa, index) => {
                 console.log(xa);
@@ -51,18 +51,18 @@ export default function Dashboard() {
                     <p className=" text-right    mt-8 mb-8 mr-4  ">
                       {xa.userResponse}
                     </p>
-                    {xa.aiResponse ? (
-                      <Response className="w-full">{xa.aiResponse}</Response>
-                    ) : (
-                      <div>
-                        <Brain className="size-5" />
-                        Thinking...
-                        <Spinner />
-                      </div>
-                    )}
+
+                    <Response className="w-full">{xa.aiResponse}</Response>
                   </div>
                 );
               })}
+              {inputSend ? (
+                <div className="text-muted-foreground flex flex-row gap-2 mb-4">
+                  <Spinner className="size-4 mt-4" />
+                </div>
+              ) : (
+                ""
+              )}
               {/* {META_DATA.map((xa) => {
                 return (
                   <div className="mt-6" key={xa.aiResponse}>
