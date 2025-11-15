@@ -3,11 +3,12 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import ChatArea from "./chat-area";
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { Brain, X } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Response } from "../ui/shadcn-io/ai/response";
 import { META_DATA } from "@/metadata/conversition-data";
 import { AIArray } from "@/type/type";
+import { Spinner } from "../ui/spinner";
 
 export default function Dashboard() {
   const [gptResponse, setGPTResponse] = useState<AIArray[]>([
@@ -17,8 +18,10 @@ export default function Dashboard() {
     },
   ]);
 
+  const [inputSend, setInputSend] = useState<boolean>(false);
+
   useEffect(() => {
-    console.log("GPT RESPONSE STATE AVRAIBEL  :  ", gptResponse);
+    console.log("GPT LENGTH, ", gptResponse.length);
   }, [gptResponse, setGPTResponse]);
 
   return (
@@ -29,7 +32,7 @@ export default function Dashboard() {
           <div className="top-0  lg:w-[calc(52rem-5rem)]  md:w-[calc(38rem-5rem)] sm:w-[calc(28rem-5rem)] w-[calc(28rem-5rem)] ">
             <ScrollArea className="h-[600px] min-aw-full">
               {" "}
-              {gptResponse.map((xa) => {
+              {gptResponse.map((xa, index) => {
                 console.log(xa);
                 return (
                   <div className="mt-6" key={xa.aiResponse}>
@@ -40,6 +43,15 @@ export default function Dashboard() {
                   </div>
                 );
               })}
+              {gptResponse.length > 1 ? (
+                ""
+              ) : (
+                <div className="flex  bg-card text-muted-foreground mt-4 text-xs items-center gap-4">
+                  <Brain className="size-5" />
+                  Thinking...
+                  <Spinner />
+                </div>
+              )}
               {/* {META_DATA.map((xa) => {
                 return (
                   <div className="mt-6" key={xa.aiResponse}>
@@ -55,7 +67,11 @@ export default function Dashboard() {
           </div>
 
           <div className="absolute bottom-0">
-            <ChatArea setData={setGPTResponse} data={gptResponse} />
+            <ChatArea
+              setData={setGPTResponse}
+              data={gptResponse}
+              setInput={setInputSend}
+            />
           </div>
         </div>
       </SidebarInset>

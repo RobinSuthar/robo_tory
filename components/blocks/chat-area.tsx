@@ -42,6 +42,7 @@ const MODELS = [
 interface data {
   data: AIArray[];
   setData: React.Dispatch<SetStateAction<AIArray[]>>;
+  setInput: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export default function ChatArea(data: data) {
@@ -142,6 +143,7 @@ export default function ChatArea(data: data) {
               variant="ghost"
               size="icon"
               onClick={async (e) => {
+                data.setInput(false);
                 const result = await GPTModel(inputValue);
 
                 if (result) {
