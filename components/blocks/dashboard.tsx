@@ -6,14 +6,13 @@ import { useEffect, useState } from "react";
 import { Brain, X } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Response } from "../ui/shadcn-io/ai/response";
-import { META_DATA } from "@/metadata/conversition-data";
 import { AIArray } from "@/type/type";
 import { Spinner } from "../ui/spinner";
 
 export default function Dashboard() {
   const [gptResponse, setGPTResponse] = useState<AIArray[]>([
     {
-      aiResponse: "# AI Greeting — Hello, how can I help you?",
+      aiResponse: "AI Greeting — Hello, how can I help you?",
       userResponse: "",
     },
   ]);
@@ -39,19 +38,18 @@ export default function Dashboard() {
                     <p className=" text-right    mt-8 mb-8 mr-4  ">
                       {xa.userResponse}
                     </p>
-                    <Response className="w-full">{xa.aiResponse}</Response>
+                    {xa.aiResponse ? (
+                      <Response className="w-full">{xa.aiResponse}</Response>
+                    ) : (
+                      <div>
+                        <Brain className="size-5" />
+                        Thinking...
+                        <Spinner />
+                      </div>
+                    )}
                   </div>
                 );
               })}
-              {gptResponse.length > 1 ? (
-                ""
-              ) : (
-                <div className="flex  bg-card text-muted-foreground mt-4 text-xs items-center gap-4">
-                  <Brain className="size-5" />
-                  Thinking...
-                  <Spinner />
-                </div>
-              )}
               {/* {META_DATA.map((xa) => {
                 return (
                   <div className="mt-6" key={xa.aiResponse}>

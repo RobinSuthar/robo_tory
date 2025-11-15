@@ -13,7 +13,8 @@ import { GPTModel } from "@/lib/actions/chatgpt";
 import { cn } from "@/lib/utils";
 import { AIArray } from "@/type/type";
 import { IconArrowUp, IconCloud, IconPhotoScan } from "@tabler/icons-react";
-import React, { SetStateAction, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
+import { Spinner } from "../ui/spinner";
 
 const MODELS = [
   {
@@ -51,12 +52,17 @@ export default function ChatArea(data: data) {
   const [selectedModel, setSelectedModel] = useState(MODELS[0]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [aiResponse, setAIResponse] = useState<string>("");
+  const [buttonLoadin, setButtonLoading] = useState<boolean>(false);
   const handleModelChange = (value: string) => {
     const model = MODELS.find((m) => m.value === value);
     if (model) {
       setSelectedModel(model);
     }
   };
+
+  useEffect(() => {
+    console.log("NUTTON LODING <  ", buttonLoadin);
+  }, [buttonLoadin, setButtonLoading]);
 
   const renderMaxBadge = () => (
     <div className="flex h-[14px] items-center gap-1.5 rounded border border-border px-1 py-0">
@@ -79,6 +85,7 @@ export default function ChatArea(data: data) {
       <div className="flex min-h-[120px] flex-col rounded-2xl cursor-text bg-card border border-border shadow-lg">
         <div className="flex-1 relative overflow-y-auto max-h-[258px]">
           <Textarea
+            id="textarea"
             ref={inputRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -131,21 +138,13 @@ export default function ChatArea(data: data) {
 
           <div className="ml-auto flex items-center gap-3">
             <Button
+              id="submitButton"
               variant="ghost"
-              size="icon"
-              className="h-6 w-6 text-muted-foreground hover:text-foreground transition-all duration-100"
-              title="Attach images"
-            >
-              <IconPhotoScan className="h-5 w-5" />
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
               onClick={async (e) => {
-                data.setInput(false);
+                setButtonLoading(true);
                 const result = await GPTModel(inputValue);
-
+                setInputValue("");
+                setButtonLoading(false);
                 if (result) {
                   return data.setData((prevItems) => [
                     ...prevItems,
@@ -157,12 +156,20 @@ export default function ChatArea(data: data) {
                 }
               }}
               className={cn(
-                "h-6 w-6 rounded-full transition-all duration-100 cursor-pointer bg-primary",
+                "h-10 w-12 rounded-full transition-all duration-100 cursor-pointer bg-primary",
                 inputValue && "bg-primary hover:bg-primary/90!"
               )}
               disabled={!inputValue}
             >
-              <IconArrowUp className="h-4 w-4 text-primary-foreground" />
+              {buttonLoadin ? (
+                <div>
+                  <Spinner className="text-white" />
+                </div>
+              ) : (
+                <div>
+                  <IconArrowUp className="h-4 w-4 text-primary-foreground" />
+                </div>
+              )}
             </Button>
           </div>
         </div>
