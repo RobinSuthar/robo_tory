@@ -10,12 +10,16 @@ import { META_DATA } from "@/metadata/conversition-data";
 import { AIArray } from "@/type/type";
 
 export default function Dashboard() {
-  const [gptResponse, setGPTResponse] = useState<AIArray>({
-    aiResponse: "Hello How are you ?",
-    userResponse: "",
-  });
+  const [gptResponse, setGPTResponse] = useState<AIArray[]>([
+    {
+      aiResponse: "## AI Greeting — Hello, how can I help you?",
+      userResponse: "",
+    },
+  ]);
 
-  useEffect(() => {}, [setGPTResponse]);
+  useEffect(() => {
+    console.log("GPT RESPONSE STATE AVRAIBEL  :  ", gptResponse);
+  }, [setGPTResponse]);
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -24,18 +28,27 @@ export default function Dashboard() {
           <div className="top-0  lg:w-[calc(52rem-5rem)]  md:w-[calc(38rem-5rem)] sm:w-[calc(28rem-5rem)] w-[calc(28rem-5rem)] ">
             <ScrollArea className="h-[600px] min-aw-full">
               {" "}
-              {META_DATA.map((xa) => {
+              {gptResponse.map((xa) => {
+                console.log(xa);
                 return (
                   <div className="mt-6" key={xa.aiResponse}>
-                    <Response className="w-full">
-                      {gptResponse.aiResponse}
-                    </Response>
+                    <p className=" text-right    mt-8 mb-8 mr-4  ">
+                      {xa.userResponse}
+                    </p>
+                    <Response className="w-full">{xa.aiResponse}</Response>
+                  </div>
+                );
+              })}
+              {/* {META_DATA.map((xa) => {
+                return (
+                  <div className="mt-6" key={xa.aiResponse}>
+                    <Response className="w-full">{gptResponse.aiResponse}</Response>
                     <p className=" text-right  mt-8 mr-4  ">
                       {xa.userResponse}
                     </p>
                   </div>
                 );
-              })}
+              })} */}
               <p className="h-20"></p>
             </ScrollArea>
           </div>
