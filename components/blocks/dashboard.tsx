@@ -1,6 +1,11 @@
 "use client";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import {
+  SidebarHeader,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import ChatArea from "./chat-area";
 import { useEffect, useState } from "react";
 import { Brain, X } from "lucide-react";
@@ -8,6 +13,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Response } from "../ui/shadcn-io/ai/response";
 import { AIArray } from "@/type/type";
 import { Spinner } from "../ui/spinner";
+import { Separator } from "@radix-ui/react-separator";
 
 export default function Dashboard() {
   const [gptResponse, setGPTResponse] = useState<AIArray[]>([
@@ -25,8 +31,15 @@ export default function Dashboard() {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar variant="inset" />
       <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator
+            orientation="vertical"
+            className="mr-2 data-[orientation=vertical]:h-4"
+          ></Separator>
+        </header>
         <div className=" flex justify-center ">
           <div className="top-0  lg:w-[calc(52rem-5rem)]  md:w-[calc(38rem-5rem)] sm:w-[calc(28rem-5rem)] w-[calc(28rem-5rem)] ">
             <ScrollArea className="h-[600px] min-aw-full">
