@@ -40,7 +40,8 @@ const MODELS = [
 ];
 
 interface data {
-  data: React.Dispatch<SetStateAction<AIArray[]>>;
+  data: AIArray[];
+  setData: React.Dispatch<SetStateAction<AIArray[]>>;
 }
 
 export default function ChatArea(data: data) {
@@ -144,22 +145,14 @@ export default function ChatArea(data: data) {
                 const result = await GPTModel(inputValue);
 
                 if (result) {
-                  console.log("BEFORE : ", data.data);
-                  data.data((prevItems) => {
-                    const a = prevItems.map((xae) => {
-                      return {
-                        ...xae,
-                        aiResponse: result,
-                        userResponse: inputValue,
-                      };
-                    });
-
-                    console.log("Afte : ", a);
-
-                    return a;
-                  });
+                  return data.setData((prevItems) => [
+                    ...prevItems,
+                    {
+                      aiResponse: result,
+                      userResponse: inputValue,
+                    },
+                  ]);
                 }
-                console.log("CLIENT SIDE DISPLAY : ", result);
               }}
               className={cn(
                 "h-6 w-6 rounded-full transition-all duration-100 cursor-pointer bg-primary",

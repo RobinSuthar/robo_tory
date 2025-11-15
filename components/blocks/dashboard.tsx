@@ -12,14 +12,15 @@ import { AIArray } from "@/type/type";
 export default function Dashboard() {
   const [gptResponse, setGPTResponse] = useState<AIArray[]>([
     {
-      aiResponse: "## AI Greeting — Hello, how can I help you?",
+      aiResponse: "# AI Greeting — Hello, how can I help you?",
       userResponse: "",
     },
   ]);
 
   useEffect(() => {
     console.log("GPT RESPONSE STATE AVRAIBEL  :  ", gptResponse);
-  }, [setGPTResponse]);
+  }, [gptResponse, setGPTResponse]);
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -54,7 +55,7 @@ export default function Dashboard() {
           </div>
 
           <div className="absolute bottom-0">
-            <ChatArea data={setGPTResponse} />
+            <ChatArea setData={setGPTResponse} data={gptResponse} />
           </div>
         </div>
       </SidebarInset>
